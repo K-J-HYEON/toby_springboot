@@ -1,0 +1,9 @@
+//	해당 부분 추가
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'helloboot'
