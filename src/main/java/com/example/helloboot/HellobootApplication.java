@@ -1,27 +1,25 @@
 package com.example.helloboot;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.DispatcherServlet;
-
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 @ComponentScan
-//@SpringBootApplication
+@SpringBootApplication
 public class HellobootApplication {
+	private final JdbcTemplate jdbcTemplate;
 
-	@Bean
-	public ServletWebServerFactory servletWebServerFactory() {
-		return new TomcatServletWebServerFactory();
+	public HellobootApplication(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	@Bean
-	public DispatcherServlet dispatcherServlet() {
-		return new DispatcherServlet();
+	@PostConstruct
+	void init() {
+		jdbcTemplate.execute("create table if not exists hello(name varchar(50) primary key, count int)");
 	}
 
 	public static void main(String[] args) {
