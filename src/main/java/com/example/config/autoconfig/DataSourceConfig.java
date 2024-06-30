@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandi
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -19,12 +20,12 @@ public class DataSourceConfig {
     @Bean
     @ConditionalMyOnClass("com.zaxxer.hikari.HikariDataSource")
     @ConditionalOnMissingBean
-    DataSource hikariDataSource(MyDataSourceProperties properties) throws ClassNotFoundException {
+    DataSource hikariDataSource(MyDataSourceProperties properties) {
         HikariDataSource dataSource = new HikariDataSource();
 
-        dataSource.setDriverClass((Class<? extends Driver>) Class.forName(properties.getDriverClassName()));
-        dataSource.setUrl(properties.getUrl());
-        dataSource.setUsername(properties.getUsername());
+        dataSource.setDriverClassName(properties.getDriverClassName());
+        dataSource.setJdbcUrl(properties.getUrl());
+        dataSource.setUserName(properties.getUsername());
         dataSource.setPassword(properties.getPassword());
 
 
@@ -34,10 +35,10 @@ public class DataSourceConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    DataSource dataSource(MyDataSourceProperties properties) {
+    DataSource dataSource(MyDataSourceProperties properties) throws ClassNotFoundException {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
 
-        dataSource.setDriverClass(Class<? extends Driver>) Class.forName(properties.getDriverClassName());
+        dataSource.setDriverClass((Class<? extends Driver>) Class.forName(properties.getDriverClassName()));
         dataSource.setUrl(properties.getUrl());
         dataSource.setUsername(properties.getUsername());
         dataSource.setPassword(properties.getPassword());
